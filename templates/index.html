@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 text-center">
+    <div class="container-fluid py-5">
+        <h3 class="display-6 fw-bold">Cloud Based Penetration Scanning Tool</h3>
+        <div class="row justify-content-md-center mt-4">
+            <p class="col-md-8 fs-4">
+                <b>CBPen</b> embraces open source technologies with a modern approach
+                to cloud based computing.
+                The utility specializes in network discovery and security auditing.
+            </p>
+            <div class="d-grid gap-2 d-md-block mt-4">
+                <a class="btn btn-success btn-lg py-2 text-white text-decoration-none"
+                   href="">
+                    <i class="bi bi-ui-checks"></i> Scan multiple hosts parallelly using cloud scanners
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row align-items-md-stretch">
+    <div class="col-md-4">
+        <div class="h-100 p-5 text-white border bg-dark rounded-3">
+            <h4>Scan for top ports</h4>
+            <p>
+                Scan for open, closed, and available ports of a host. Get a complete report with
+                details. It is quick and robust!
+            </p>
+            <a class="btn btn-outline-light py-2 text-decoration-none" href="">
+                <i class="bi-shield-check"></i> Port Scan
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="h-100 p-5 bg-light border rounded-3">
+            <h4>Services with versions</h4>
+            <p>
+                Want to get the services running on each IP of a host? What about their versions including operating
+                systems?
+                Give it a try!
+            </p>
+            <a class="btn btn-outline-dark py-2 text-decoration-none" href="">
+                <i class="bi-journal-check"></i> Services & OS
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="h-100 p-5 text-white border bg-secondary rounded-3">
+            <h4>Find subdomains, SSL</h4>
+            <p>
+                Find the subdomains of the hosts, even which invisible to search engines. Additionally list the SSL
+                certificates.
+            </p>
+            <a class="btn btn-outline-dark text-white py-2 text-decoration-none"
+               href="">
+                <i class="bi-card-checklist"></i> Subdomains & SSL
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+{% endblock %}

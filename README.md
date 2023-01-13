@@ -1,8 +1,20 @@
 ## Predictor of Antibody colors
 Filters combinations from antibody conjugate pairs.
 
-## Demo
+## Installation
+- CLI app requirements:
+```shell
+pip install -r requirements.txt
+```
+- Web app requirements:
+```shell
+pip install -r web_requirements.txt
+```
+
+## Run CLI App
+- Run the [inventory_predictor.py](inventory_predictor.py) file using Python3 and follow on screen instructions.
 ```text
+python inventory_predictor.py
 Antibody list: CD103, CD11c, CD138
 ------------------------
 CD103 has 4 conjugates: APC, APC-R700, BV711, PE
@@ -94,5 +106,13 @@ Enter number of conditions (0 to exit): 0
 Program terminated
 ```
 
+## Run web app
+- Install the web app requirements.
+- Run the web application:
+```shell
+flask run
+```
+
 ### References
 - [Stackoverflow answer: All combinations from dictionary](https://stackoverflow.com/a/61335465/3129414)
+- [Flask minimal example](https://flask.palletsprojects.com/en/2.2.x/quickstart/#a-minimal-application)

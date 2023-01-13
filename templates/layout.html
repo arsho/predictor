@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!--Head Starts-->
+    {% include "partials/head.html" %}
+    <!--Head Ends-->
+    {% block head %}
+    {% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light bg-gradient">
+<div class="container p-3 bg-white" id="container" style="display:none;">
+    <header>
+        <!--Header Starts-->
+        {% include "partials/header.html" %}
+        <!--Header Ends-->
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</div>
+<!--Footer Starts-->
+{% include "partials/footer.html" %}
+<!--Footer Ends-->
+<!--Scripts Starts-->
+{% include "partials/scripts.html" %}
+<!--Scripts Ends-->
+{% block script %}
+{% endblock %}
+
+</body>
+</html>
