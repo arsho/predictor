@@ -1,5 +1,4 @@
 import os
-import json
 import itertools
 import pandas as pd
 
@@ -27,8 +26,6 @@ def get_search_results(data, search_items):
     for antibody in search_items:
         if antibody in data:
             search_results[antibody] = data[antibody]
-        else:
-            return None
     keys = search_results.keys()
     values = search_results.values()
     panels = []
@@ -38,18 +35,30 @@ def get_search_results(data, search_items):
         unique_value_length = len(set(panel.values()))
         if unique_value_length == key_length and panel not in panels:
             panels.append(panel)
-    return panels
+    not_found_antibody = list(set(search_items).difference(set(keys)))
+    return panels, not_found_antibody
 
 
-def get_filtered_panels(panels, criterions):
-    for criteria in criterions:
-        panels = [panel for panel in panels if criteria in panel.items()]
-    return panels
+def get_filtered_panels(panels, patterns):
+    patterns = patterns.split(",")
+    pairs = []
+    not_found_patterns = []
+    for pattern in patterns:
+        antibody, conjugate = pattern.split(":")
+        pairs.append((antibody.strip(), conjugate.strip()))
+    for pair in pairs:
+        temp_panels = [panel for panel in panels if pair in panel.items()]
+        if len(temp_panels) == 0:
+            not_found_patterns.append(",".join(pair))
+        else:
+            panels = temp_panels
+    return panels, not_found_patterns
 
 
 def get_anitibody_data():
     folder = "data"
-    data_file = "inventory_small.xlsx"
+    # data_file = "inventory_small.xlsx"
+    data_file = "inventory.xlsx"
     data = read_data(os.path.join(folder, data_file))
     return data
 
@@ -57,26 +66,5 @@ def get_anitibody_data():
 def get_initial_panels(search_items):
     data = get_anitibody_data()
     # CD103,CD11c,CD138
-    # search_items = ["CD103", "CD11c", "CD138"]
-    # # search_items = ["CD103", "CD138"]
-    # # ["CD4", "CD8", "CD19", "CD38"]
     panels = get_search_results(data, search_items)
     return panels
-
-
-if __name__ == "__main__":
-    while True:
-        user_msg = "Enter number of conditions (0 to exit): "
-        number_of_criterias = int(input(user_msg))
-        if number_of_criterias == 0:
-            print("Program terminated\n")
-            break
-        criteria = []
-        print("Enter condition in \"Antibody:Conjugate\" pattern "
-              "(e.g. CD103:APC)")
-        for i in range(number_of_criterias):
-            condition = input(f"Enter condition #{i + 1}: ")
-            antibody, conjugate = condition.split(":")
-            criteria.append((antibody.strip(), conjugate.strip()))
-        panels = get_filtered_panels(panels, criteria)
-        print("")

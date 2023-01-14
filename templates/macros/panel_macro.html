@@ -9,7 +9,7 @@
         <div class="row">
             {% for panel in panels %}
             <div class="col-3">
-                <table class="table table-sm table-bordered table-striped caption-top mb-4">
+                <table class="table table-sm table-bordered caption-top mb-4">
                     <caption
                             class="card-subtitle text-center mb-0 bg-secondary bg-gradient text-white">
                         Suggested Panel #<b>{{ loop.index }}</b>
@@ -22,7 +22,12 @@
                     </thead>
                     <tbody>
                     {% for key, value in panel.items() %}
+                    {% set current_pattern = [key, ':', value]|join %}
+                    {% if current_pattern in old_patterns %}
+                    <tr class="table-info">
+                    {% else %}
                     <tr>
+                    {% endif %}
                         <td>{{ key }}</td>
                         <td>{{ value }}</td>
                     </tr>
