@@ -14,4 +14,6 @@ $(document).ready(function () {
         return false;
     });
     $("#container").show();
+    $(".result").hide();
+    $(".result").slideDown("slow");
 });

@@ -1,18 +1,33 @@
 ## Predictor of Antibody colors
+
 Filters combinations from antibody conjugate pairs.
 
 ## Installation
-- CLI app requirements:
+- Create and activate virtual environments:
+```shell
+python3 -venv venv
+source venv/bin/activate
+```
+- Install the required packages:
 ```shell
 pip install -r requirements.txt
 ```
-- Web app requirements:
+
+## Run web app
+
+- Run the web application:
+
 ```shell
-pip install -r web_requirements.txt
+flask run
 ```
 
+![alt web app demo](screenshots/dashboard.png)
+
 ## Run CLI App
-- Run the [inventory_predictor.py](inventory_predictor.py) file using Python3 and follow on screen instructions.
+
+- Run the [inventory_predictor.py](inventory_predictor.py) file using Python3
+  and follow the on-screen instructions.
+
 ```text
 python inventory_predictor.py
 Antibody list: CD103, CD11c, CD138
@@ -34,12 +49,6 @@ Suggested Panel #2
 CD103: APC
 CD11c: BUV805
 CD138: BV605
-
-Suggested Panel #3
---------------------
-CD103: APC
-CD11c: BUV805
-CD138: BV750
 
 ...
 ...
@@ -106,13 +115,7 @@ Enter number of conditions (0 to exit): 0
 Program terminated
 ```
 
-## Run web app
-- Install the web app requirements.
-- Run the web application:
-```shell
-flask run
-```
-
 ### References
+
 - [Stackoverflow answer: All combinations from dictionary](https://stackoverflow.com/a/61335465/3129414)
 - [Flask minimal example](https://flask.palletsprojects.com/en/2.2.x/quickstart/#a-minimal-application)

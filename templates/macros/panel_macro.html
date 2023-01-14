@@ -1,30 +1,6 @@
-{% macro panel_macro(panels,old_patterns) -%}
+{% macro panel_macro(panels,old_patterns,searched_antibody) -%}
 
-<div class="row">
-    <div class="col-12">
-        <div class="card mb-4">
-            <div class="card-header">
-                Enter condition in Antibody:Conjugate pattern. If multiple, use comma in between.
-            </div>
-            <div class="card-body">
-                <form method="post" action="{{ url_for('index') }}">
-                    <input type="text" name="patterns" class="form-control mb-3" value={{old_patterns}}>
-                    <textarea class="visually-hidden" name="old_panels">
-                        {{ panels | safe }}
-                    </textarea>
-                    <div class="d-grid gap-2">
-                        <input class="btn btn-success btn-block" type="submit" name="secondary_form"
-                               value="Refine panels"/>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- .card -->
-    </div>
-</div>
-
-
-<div class="card mb-2">
+<div class="card mb-2 result">
     <div class="card-header">
         Total Panels: <b>{{ panels|length }}</b>
     </div>
@@ -32,9 +8,10 @@
         {% if panels %}
         <div class="row">
             {% for panel in panels %}
-            <div class="col-2">
+            <div class="col-3">
                 <table class="table table-sm table-bordered table-striped caption-top mb-4">
-                    <caption class="card-subtitle text-center mb-0 bg-secondary bg-gradient text-white">
+                    <caption
+                            class="card-subtitle text-center mb-0 bg-secondary bg-gradient text-white">
                         Suggested Panel #<b>{{ loop.index }}</b>
                     </caption>
                     <thead class="table-light">

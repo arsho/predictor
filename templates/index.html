@@ -2,45 +2,99 @@
 {% block head %}
 {% endblock %}
 {% block content %}
-<div class="p-5 mb-4 bg-light rounded-3 text-center">
-    <div class="container-fluid py-3">
+<div class="p-4 mb-4 bg-light rounded-3 text-center">
+    <div class="container-fluid py-1">
         <h3 class="display-6 fw-bold">
             <i class="bi bi-collection"></i>
             Antibody Conjugate Panel Predictor (ACPP)
         </h3>
         <div class="row justify-content-md-center mt-4">
             <p class="col-md-12 fs-4">
-                <b>ACPP</b> helps researchers to refine antibody-conjugate panels by reducing search space
+                <b>ACPP</b> helps researchers to refine antibody-conjugate
+                panels by reducing search space
             </p>
         </div>
     </div>
 </div>
-
 <div class="row">
-    <div class="col-12">
-        <div class="card mb-4">
-            <div class="card-header">
-                Antibody selection
+    <div class="col-6">
+        <div class="card border-dark mb-4">
+            <div class="card-header border-dark">
+                {% if searched_antibody %}
+                Searched Antibody List: <b>{{searched_antibody|safe}}</b>
+                {% else %}
+                Antibody List Selection
+                {% endif %}
             </div>
             <div class="card-body">
                 <form method="post" action="{{ url_for('index') }}">
-                    <input type="text" name="antibody" class="form-control mb-3" value="CD103,CD11c,CD138">
-                    <div class="d-grid gap-2">
-                        <input class="btn btn-dark btn-block" type="submit" name="primary_form" value="Load panels"/>
+                    <div class="mb-3">
+                        <label for="antibody"
+                               class="form-label">
+                            Enter comma seperated list of antibodies (example:
+                            CD103,CD11c,CD138)
+                        </label>
+                        <input type="text" name="antibody" id="antibody"
+                               class="form-control mb-3">
                     </div>
+
+                    <button class="btn btn-dark text-center m-auto"
+                            type="submit"
+                            name="primary_form">
+                        <i class="bi bi-search"></i> Search
+                    </button>
                 </form>
             </div>
         </div>
         <!-- .card -->
     </div>
-</div>
-
-<div>
     {% if panels %}
-    {% from 'macros/panel_macro.html' import panel_macro %}
-    {{ panel_macro(panels,old_patterns) }}
+    <div class="col-6">
+        <div class="card border-success mb-4">
+            <div class="card-header border-success">
+                {% if old_patterns %}
+                Filtered patterns: <b>{{old_patterns}}</b>
+                {% else %}
+                No filter yet
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('index') }}">
+                    <div class="mb-3">
+                        <label for="patterns"
+                               class="form-label">
+                            Refine panels in <i><b>Antibody:Conjugate</b></i>
+                            pattern
+                            (example: CD103:APC,CD11c:PE-Cy7)
+                        </label>
+                        <input type="text" name="patterns"
+                               class="form-control" id="patterns">
+                    </div>
+                    <textarea class="visually-hidden" name="searched_antibody">
+                        {{ searched_antibody | safe }}
+                    </textarea>
+                    <textarea class="visually-hidden" name="old_patterns">
+                        {{ old_patterns | safe }}
+                    </textarea>
+                    <textarea class="visually-hidden" name="old_panels">
+                        {{ panels | safe }}
+                    </textarea>
+                    <button class="btn btn-success text-center"
+                            type="submit"
+                            name="secondary_form">
+                        <i class="bi bi-filter"></i> Refine panels
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- .card -->
+    </div>
     {% endif %}
 </div>
+{% if panels %}
+{% from 'macros/panel_macro.html' import panel_macro %}
+{{ panel_macro(panels,old_patterns,searched_antibody) }}
+{% endif %}
 
 
 {% endblock %}
