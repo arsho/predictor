@@ -1,8 +1,8 @@
-## Predictor of Antibody colors [Live demo](https://ashovon.pythonanywhere.com/)
+## Predictor of Antibody colors: [Live demo](https://ashovon.pythonanywhere.com/)
 Filters combinations from antibody conjugate pairs.
 
 ## Live demo
-The project can be seen at [ashovon.pythonanywhere.com]([Live demo](https://ashovon.pythonanywhere.com/))
+Live demonstration at [ashovon.pythonanywhere.com](Live demo(https://ashovon.pythonanywhere.com/)
 
 ## Installation
 - Create and activate virtual environments:
