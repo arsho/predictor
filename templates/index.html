@@ -3,58 +3,45 @@
 {% endblock %}
 {% block content %}
 <div class="p-5 mb-4 bg-light rounded-3 text-center">
-    <div class="container-fluid py-5">
-        <h3 class="display-6 fw-bold">Cloud Based Penetration Scanning Tool</h3>
+    <div class="container-fluid py-3">
+        <h3 class="display-6 fw-bold">
+            <i class="bi bi-collection"></i>
+            Antibody Conjugate Panel Predictor (ACPP)
+        </h3>
         <div class="row justify-content-md-center mt-4">
-            <p class="col-md-8 fs-4">
-                <b>CBPen</b> embraces open source technologies with a modern approach
-                to cloud based computing.
-                The utility specializes in network discovery and security auditing.
+            <p class="col-md-12 fs-4">
+                <b>ACPP</b> helps researchers to refine antibody-conjugate panels by reducing search space
             </p>
-            <div class="d-grid gap-2 d-md-block mt-4">
-                <a class="btn btn-success btn-lg py-2 text-white text-decoration-none"
-                   href="">
-                    <i class="bi bi-ui-checks"></i> Scan multiple hosts parallelly using cloud scanners
-                </a>
-
-            </div>
-
         </div>
     </div>
-</div>
-
-<div>
-    {{ panels }}
 </div>
 
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header">
-                Select Site to Scan Top Ports
+                Antibody selection
             </div>
             <div class="card-body">
-                <form method="post" action="">
-                    <select name="site" class="form-select mb-3">
-                        {% for site in sites %}
-                        <option value="{{ site }}">{{ site }}</option>
-                        {% endfor %}
-                    </select>
+                <form method="post" action="{{ url_for('index') }}">
+                    <input type="text" name="antibody" class="form-control mb-3" value="CD103,CD11c,CD138">
                     <div class="d-grid gap-2">
-                        <button class="btn btn-secondary btn-block">
-                            Scan
-                        </button>
+                        <input class="btn btn-dark btn-block" type="submit" name="primary_form" value="Load panels"/>
                     </div>
                 </form>
             </div>
         </div>
         <!-- .card -->
-        {% if site %}
-        {% from 'macros/ports_macro.html' import ports_macro %}
-        {{ ports_macro(site, hosts, total_time) }}
-        {% endif %}
     </div>
 </div>
+
+<div>
+    {% if panels %}
+    {% from 'macros/panel_macro.html' import panel_macro %}
+    {{ panel_macro(panels,old_patterns) }}
+    {% endif %}
+</div>
+
 
 {% endblock %}
 {% block script %}

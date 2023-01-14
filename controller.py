@@ -47,14 +47,16 @@ def get_filtered_panels(panels, criterions):
     return panels
 
 
-def get_initial_panels():
+def get_anitibody_data():
     folder = "data"
     data_file = "inventory_small.xlsx"
     data = read_data(os.path.join(folder, data_file))
-    antibody_list_file = "antibody.xlsx"
-    search_items = read_search_list(os.path.join(folder, antibody_list_file))
-    print(f"Antibody list: {', '.join(search_items)}")
-    print('-' * 24)
+    return data
+
+
+def get_initial_panels(search_items):
+    data = get_anitibody_data()
+    # CD103,CD11c,CD138
     # search_items = ["CD103", "CD11c", "CD138"]
     # # search_items = ["CD103", "CD138"]
     # # ["CD4", "CD8", "CD19", "CD38"]
@@ -63,29 +65,18 @@ def get_initial_panels():
 
 
 if __name__ == "__main__":
-    folder = "data"
-    data_file = "inventory_small.xlsx"
-    data = read_data(os.path.join(folder, data_file))
-    antibody_list_file = "antibody.xlsx"
-    search_items = read_search_list(os.path.join(folder, antibody_list_file))
-    print(f"Antibody list: {', '.join(search_items)}")
-    print('-' * 24)
-    # search_items = ["CD103", "CD11c", "CD138"]
-    # # search_items = ["CD103", "CD138"]
-    # # ["CD4", "CD8", "CD19", "CD38"]
-    panels = get_search_results(data, search_items)
     while True:
         user_msg = "Enter number of conditions (0 to exit): "
         number_of_criterias = int(input(user_msg))
         if number_of_criterias == 0:
             print("Program terminated\n")
             break
-        criterions = []
+        criteria = []
         print("Enter condition in \"Antibody:Conjugate\" pattern "
               "(e.g. CD103:APC)")
         for i in range(number_of_criterias):
             condition = input(f"Enter condition #{i + 1}: ")
             antibody, conjugate = condition.split(":")
-            criterions.append((antibody.strip(), conjugate.strip()))
-        panels = get_filtered_panels(panels, criterions)
+            criteria.append((antibody.strip(), conjugate.strip()))
+        panels = get_filtered_panels(panels, criteria)
         print("")
