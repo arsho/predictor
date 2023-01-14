@@ -2,7 +2,7 @@
 Filters combinations from antibody conjugate pairs.
 
 ## Live demo
-Live demonstration at [ashovon.pythonanywhere.com](Live demo(https://ashovon.pythonanywhere.com/)
+Live demonstration at [ashovon.pythonanywhere.com](https://ashovon.pythonanywhere.com/)
 
 ## Installation
 - Create and activate virtual environments:
