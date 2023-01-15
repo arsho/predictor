@@ -8,10 +8,10 @@
         {% if panels %}
         <div class="row">
             {% for panel in panels %}
-            <div class="col-3">
-                <table class="table table-sm table-bordered caption-top mb-4">
+            <div class="col-12 col-lg-3">
+                <table class="table table-sm table-bordered caption-top mb-3 mb-lg-4">
                     <caption
-                            class="card-subtitle text-center mb-0 bg-secondary bg-gradient text-white">
+                            class="card-subtitle text-center p-2 mb-0 bg-secondary bg-gradient text-white">
                         Suggested Panel #<b>{{ loop.index }}</b>
                     </caption>
                     <thead class="table-light">
@@ -25,14 +25,26 @@
                     {% set current_pattern = [key, ':', value]|join %}
                     {% if current_pattern in old_patterns %}
                     <tr class="table-info">
-                    {% else %}
+                        {% else %}
                     <tr>
-                    {% endif %}
+                        {% endif %}
                         <td>{{ key }}</td>
                         <td>{{ value }}</td>
                     </tr>
                     {% endfor %}
                     </tbody>
+                    <tfoot class="table-light">
+                    <tr class="text-center">
+                        <td colspan="2 text-center">
+                            <button class="btn btn-sm btn-outline-success btn-block mt-0 mx-auto"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Save the panel">
+                                <i class="bi bi-database-check"></i> Save (Upcoming)
+                            </button>
+                        </td>
+                    </tr>
+
+
+                    </tfoot>
                 </table>
             </div>
             {% endfor %}

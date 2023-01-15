@@ -17,7 +17,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-6">
+    <div class="col-12 col-lg-6">
         <div class="card border-dark mb-4">
             <div class="card-header border-dark">
                 {% if searched_antibody %}
@@ -40,7 +40,8 @@
 
                     <button class="btn btn-dark text-center m-auto"
                             type="submit"
-                            name="primary_form">
+                            name="primary_form" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="Search antibody">
                         <i class="bi bi-search"></i> Search
                     </button>
                 </form>
@@ -49,7 +50,7 @@
         <!-- .card -->
     </div>
     {% if panels %}
-    <div class="col-6">
+    <div class="col-12 col-lg-6">
         <div class="card border-success mb-4">
             <div class="card-header border-success">
                 {% if old_patterns %}
@@ -81,7 +82,8 @@
                     </textarea>
                     <button class="btn btn-success text-center"
                             type="submit"
-                            name="secondary_form">
+                            name="secondary_form" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="Refine panels using patterns">
                         <i class="bi bi-filter"></i> Refine panels
                     </button>
                 </form>
