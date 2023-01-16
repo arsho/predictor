@@ -77,9 +77,6 @@
                     <textarea class="visually-hidden" name="old_patterns">
                         {{ old_patterns | safe }}
                     </textarea>
-                    <textarea class="visually-hidden" name="old_panels">
-                        {{ panels | safe }}
-                    </textarea>
                     <button class="btn btn-success text-center"
                             type="submit"
                             name="secondary_form" data-bs-toggle="tooltip" data-bs-placement="bottom"
@@ -140,7 +137,7 @@
 
 {% if panels %}
 {% from 'macros/panel_macro.html' import panel_macro %}
-{{ panel_macro(panels,old_patterns,searched_antibody) }}
+{{ panel_macro(total_panels,panels,old_patterns,searched_antibody) }}
 {% endif %}
 
 
