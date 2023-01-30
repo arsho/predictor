@@ -95,6 +95,18 @@ def get_full_data():
     data_path = os.path.join(dirname(realpath(__file__)), folder, data_file)
     return read_data_large(data_path)
 
+def get_antibody_conjugate():
+    folder = "data"
+    data_file = "inventory_large.xlsx"
+    data_path = os.path.join(dirname(realpath(__file__)), folder, data_file)
+    data = read_data_large(data_path)
+    antibody = []
+    conjugate = []
+    for row in data:
+        antibody.append(row["Antibody"])
+        conjugate.append(row["Conjugate"])
+    return list(set(antibody)), list(set(conjugate))
+
 
 def get_initial_panels(search_items):
     data = get_anitibody_data()

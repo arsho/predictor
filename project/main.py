@@ -5,7 +5,7 @@ from flask import Blueprint, Flask, render_template, request, jsonify, url_for, 
     flash
 from flask_login import login_required, current_user
 from .controller import get_initial_panels, get_filtered_panels, \
-    get_initial_records
+    get_initial_records, get_antibody_conjugate
 
 main = Blueprint('main', __name__)
 
@@ -24,6 +24,7 @@ def profile():
 @main.route('/add', methods=["GET", "POST"])
 @login_required
 def add_panel():
+    antibodies, conjugates = get_antibody_conjugate()
     if request.method == "POST":
         try:
             if "primary_form" in request.form:
@@ -69,18 +70,9 @@ def add_panel():
                           f"<b>{item[0]}:{item[1]}</b> not found", "warning")
                 return render_template('add.html', records=search_result,
                                        searched_items=search_items,
-                                       name=current_user.name)
-
-                # flash("Primary form submitted", "success")
-                # antibody = request.form["antibody"].strip()
-                # antibodies = [s.strip() for s in antibody.split(",")]
-                # panels, not_found = get_initial_panels(antibodies)
-                # for item in not_found:
-                #     flash(f"Antibody <b>{item}</b> not found", "warning")
-                # return render_template('add.html', panels=panels,
-                #                        old_patterns="",
-                #                        searched_antibody=antibody,
-                #                        name=current_user.name)
+                                       name=current_user.name,
+                                       antibodies=antibodies,
+                                       conjugates=conjugates)
             elif "secondary_form" in request.form:
                 # flash("Secondary form submitted", "success")
                 panels = json.loads(
@@ -108,4 +100,7 @@ def add_panel():
             flash(str(ex), "error")
             return redirect(url_for("main.add_panel"))
     else:
-        return render_template('add.html', name=current_user.name)
+        return render_template('add.html',
+                               name=current_user.name,
+                               antibodies=antibodies,
+                               conjugates=conjugates)

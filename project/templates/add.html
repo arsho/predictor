@@ -155,31 +155,48 @@
     <div class="col-12">
         <div class="card border-success mb-4">
             <div class="card-header border-success">
-                Search results
+                Create Panel
             </div>
             <div class="card-body">
-                <table class="table table-sm table-bordered">
-                    <thead>
-                    <tr class="table-secondary">
-                        <th>Selection</th>
-                        {% for key in records[0].keys() %}
-                        <th>{{ key }}</th>
-                        {% endfor %}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <form action="">
+                <form action="">
+                    <div class="row g-3 align-items-center">
+                      <div class="col-auto">
+                        <label for="panel_t" class="col-form-label">Password</label>
+                      </div>
+                      <div class="col-auto">
+                        <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                      </div>
+                      <div class="col-auto">
+                        <span id="passwordHelpInline" class="form-text">
+                          Must be 8-20 characters long.
+                        </span>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control"
+                           name="panel_title"
+                           placeholder="Enter panel title">
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                        <tr class="table-secondary">
+                            <th>Selection</th>
+                            {% for key in records[0].keys() %}
+                            <th>{{ key }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
                         {% for item in records %}
                         <tr>
-                            <td><input type="checkbox" name="selected_rows" value="{{ i }}"></td>
+                            <td><input type="checkbox" name="selected_rows"
+                                       value="{{ i }}"></td>
                             {% for value in item.values() %}
                             <td>{{ value }}</td>
                             {% endfor %}
                         </tr>
                         {% endfor %}
-                    </form>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
         <!-- .card -->
@@ -190,4 +207,26 @@
 
 {% endblock %}
 {% block script %}
+    {% if antibodies %}
+        var antibodies = {{ antibodies|tojson }};
+        $(".antibody-auto").autocomplete({
+            source: function( request, response ) {
+                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+                response( $.grep( antibodies, function( item ) {
+                  return matcher.test( item );
+                }) );
+            }
+        });
+    {% endif %}
+    {% if conjugates %}
+        var conjugates = {{ conjugates|tojson }};
+        $(".conjugate-auto").autocomplete({
+            source: function( request, response ) {
+                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+                response( $.grep( conjugates, function( item ) {
+                  return matcher.test( item );
+                }) );
+            }
+        });
+    {% endif %}
 {% endblock %}
