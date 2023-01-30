@@ -21,5 +21,15 @@ $(document).ready(function () {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 
+    var availableTags = [
+        "CD103",
+        "CD11b",
+        "CD102",
+        "CD172a (SIRPa)"
+    ];
+    $(".antibody-auto").autocomplete({
+        source: availableTags
+    });
+
 });
 

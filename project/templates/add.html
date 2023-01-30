@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<div>
+    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+    {% if errors %}
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <ul class="list-group list-group-flush">
+            {%- for msg in errors %}
+            <li class="list-group-item">{{ msg|safe }}</li>
+            {% endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>
+<div>
+    {% with warnings = get_flashed_messages(category_filter=["warning"]) %}
+    {% if warnings %}
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Warning!</h4>
+        <ul class="list-group list-group-flush">
+            {%- for msg in warnings %}
+            <li class="list-group-item">{{ msg|safe }}</li>
+            {% endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>
+<div>
+    {% with success_msg = get_flashed_messages(category_filter=["success"]) %}
+    {% if success_msg %}
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Success!</h4>
+        <ul class="list-group list-group-flush">
+            {%- for msg in success_msg %}
+            <li class="list-group-item">{{ msg|safe }}</li>
+            {% endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card border-dark mb-4">
+            <div class="card-header border-dark">
+                {% if searched_antibody %}
+                Searched Antibody List: <b>{{searched_antibody|safe}}</b>
+                {% else %}
+                Antibody List Selection
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <form class="row g-3" method="post"
+                      action="{{ url_for('main.add_panel') }}">
+                    <div class="col-md-6">
+                        <p class="mb-0 lead">Antibody List</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-0 lead">Conjugate List</p>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control antibody-auto"
+                               name="antibody_1"
+                               placeholder="Enter antibody name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control conjugate-auto"
+                               name="conjugate_1"
+                               placeholder="Enter conjugate name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control antibody-auto"
+                               name="antibody_2"
+                               placeholder="Enter antibody name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control conjugate-auto"
+                               name="conjugate_2"
+                               placeholder="Enter conjugate name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control antibody-auto"
+                               name="antibody_3"
+                               placeholder="Enter antibody name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control conjugate-auto"
+                               name="conjugate_3"
+                               placeholder="Enter conjugate name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control antibody-auto"
+                               name="antibody_4"
+                               placeholder="Enter antibody name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control conjugate-auto"
+                               name="conjugate_4"
+                               placeholder="Enter conjugate name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control antibody-auto"
+                               name="antibody_5"
+                               placeholder="Enter antibody name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control conjugate-auto"
+                               name="conjugate_5"
+                               placeholder="Enter conjugate name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control antibody-auto"
+                               name="antibody_6"
+                               placeholder="Enter antibody name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control conjugate-auto"
+                               name="conjugate_6"
+                               placeholder="Enter conjugate name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control antibody-auto"
+                               name="antibody_7"
+                               placeholder="Enter antibody name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control conjugate-auto"
+                               name="conjugate_7"
+                               placeholder="Enter conjugate name">
+                    </div>
+
+
+                    <div class="col-12">
+                        <button class="btn btn-dark text-center m-auto"
+                                type="submit"
+                                name="primary_form" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                title="Search antibody">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- .card -->
+    </div>
+    {% if records %}
+    <div class="col-12">
+        <div class="card border-success mb-4">
+            <div class="card-header border-success">
+                Search results
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                    <tr class="table-secondary">
+                        <th>Selection</th>
+                        {% for key in records[0].keys() %}
+                        <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <form action="">
+                        {% for item in records %}
+                        <tr>
+                            <td><input type="checkbox" name="selected_rows" value="{{ i }}"></td>
+                            {% for value in item.values() %}
+                            <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </form>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- .card -->
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}
+{% block script %}
+{% endblock %}

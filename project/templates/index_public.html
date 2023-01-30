@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<div class="p-4 mb-4 bg-light rounded-3 text-center">
+    <div class="container-fluid py-4">
+        <h3 class="display-6 fw-bold">
+            <i class="bi bi-collection"></i>
+            Antibody Conjugate Panel (ACP)
+        </h3>
+        <div class="row justify-content-md-center mt-4">
+            <p class="col-md-12 fs-4">
+                <b>ACP</b> helps researchers to refine antibody-conjugate
+                panels by reducing search space
+            </p>
+        </div>
+    </div>
+</div>
+
+<div>
+    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+    {% if errors %}
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <ul class="list-group list-group-flush">
+            {%- for msg in errors %}
+            <li class="list-group-item">{{ msg|safe }}</li>
+            {% endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>
+<div>
+    {% with warnings = get_flashed_messages(category_filter=["warning"]) %}
+    {% if warnings %}
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Warning!</h4>
+        <ul class="list-group list-group-flush">
+            {%- for msg in warnings %}
+            <li class="list-group-item">{{ msg|safe }}</li>
+            {% endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>
+<div>
+    {% with success_msg = get_flashed_messages(category_filter=["success"]) %}
+    {% if success_msg %}
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Success!</h4>
+        <ul class="list-group list-group-flush">
+            {%- for msg in success_msg %}
+            <li class="list-group-item">{{ msg|safe }}</li>
+            {% endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>
+
+
+{% endblock %}
+{% block script %}
+{% endblock %}

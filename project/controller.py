@@ -4,6 +4,7 @@ import itertools
 import pandas as pd
 from os.path import dirname, realpath
 
+
 def read_data(datafile):
     data = pd.read_excel(datafile)
     mapper = {}
@@ -15,6 +16,27 @@ def read_data(datafile):
         else:
             mapper[antibody] = [conjugate]
     return mapper
+
+
+def read_data_large(datafile):
+    '''
+    Lab#                       1.0
+    Antibody                 CD102
+    Conjugate                AF647
+    Clone             3C4 (MIC2/4)
+    Vendor               BioLegend
+    Catalog Number          105612
+    Users                      3.0
+    Chanel                     ASK
+    #C                        1ASK
+    Backup                       1
+    Lot#                   B227625
+    RRID                       NaN
+    '''
+    data = pd.read_excel(datafile, sheet_name="Inventory")
+    data.dropna(how='all', inplace=True)
+    data.fillna("", inplace=True)
+    return data.to_dict(orient='records')
 
 
 def read_search_list(datafile):
@@ -61,14 +83,45 @@ def get_filtered_panels(panels, patterns):
 
 def get_anitibody_data():
     folder = "data"
-    # data_file = "inventory_small.xlsx"
     data_file = "inventory.xlsx"
-    data = read_data(os.path.join(dirname(realpath(__file__)), folder, data_file))
+    data = read_data(
+        os.path.join(dirname(realpath(__file__)), folder, data_file))
     return data
+
+
+def get_full_data():
+    folder = "data"
+    data_file = "inventory_large.xlsx"
+    data_path = os.path.join(dirname(realpath(__file__)), folder, data_file)
+    return read_data_large(data_path)
 
 
 def get_initial_panels(search_items):
     data = get_anitibody_data()
-    # CD103,CD11c,CD138
     panels = get_search_results(data, search_items)
     return panels
+
+
+def get_initial_records(search_elements):
+    data = get_full_data()
+    filtered_data = []
+    not_found_elements = []
+    for search_element in search_elements:
+        found = False
+        for row in data:
+            if row["Antibody"] == search_element[0] and \
+                    row["Conjugate"] == search_element[1]:
+                found = True
+                filtered_data.append(row)
+        if not found:
+            not_found_elements.append(search_element)
+    return filtered_data, not_found_elements
+
+
+if __name__ == "__main__":
+    print("main")
+    data = get_full_data()
+    search_elements = [
+        ["CD103", "APC"]
+    ]
+    print(get_initial_records(search_elements))
