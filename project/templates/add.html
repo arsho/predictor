@@ -2,50 +2,6 @@
 {% block head %}
 {% endblock %}
 {% block content %}
-<div>
-    {% with errors = get_flashed_messages(category_filter=["error"]) %}
-    {% if errors %}
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Error!</h4>
-        <ul class="list-group list-group-flush">
-            {%- for msg in errors %}
-            <li class="list-group-item">{{ msg|safe }}</li>
-            {% endfor -%}
-        </ul>
-    </div>
-    {% endif %}
-    {% endwith %}
-</div>
-<div>
-    {% with warnings = get_flashed_messages(category_filter=["warning"]) %}
-    {% if warnings %}
-    <div class="alert alert-warning" role="alert">
-        <h4 class="alert-heading">Warning!</h4>
-        <ul class="list-group list-group-flush">
-            {%- for msg in warnings %}
-            <li class="list-group-item">{{ msg|safe }}</li>
-            {% endfor -%}
-        </ul>
-    </div>
-    {% endif %}
-    {% endwith %}
-</div>
-<div>
-    {% with success_msg = get_flashed_messages(category_filter=["success"]) %}
-    {% if success_msg %}
-    <div class="alert alert-success" role="alert">
-        <h4 class="alert-heading">Success!</h4>
-        <ul class="list-group list-group-flush">
-            {%- for msg in success_msg %}
-            <li class="list-group-item">{{ msg|safe }}</li>
-            {% endfor -%}
-        </ul>
-    </div>
-    {% endif %}
-    {% endwith %}
-</div>
-
-
 <div class="row">
     <div class="col-12">
         <div class="card border-dark mb-4">
@@ -67,22 +23,22 @@
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control antibody-auto"
-                               name="antibody_1"
+                               name="antibody_1" value="CD103"
                                placeholder="Enter antibody name">
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control conjugate-auto"
-                               name="conjugate_1"
+                               name="conjugate_1" value="APC"
                                placeholder="Enter conjugate name">
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control antibody-auto"
-                               name="antibody_2"
+                               name="antibody_2" value="CD103"
                                placeholder="Enter antibody name">
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control conjugate-auto"
-                               name="conjugate_2"
+                               name="conjugate_2" value="PE"
                                placeholder="Enter conjugate name">
                     </div>
                     <div class="col-md-6">
@@ -158,23 +114,18 @@
                 Create Panel
             </div>
             <div class="card-body">
-                <form action="">
-                    <div class="row g-3 align-items-center">
-                      <div class="col-auto">
-                        <label for="panel_t" class="col-form-label">Password</label>
-                      </div>
-                      <div class="col-auto">
-                        <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
-                      </div>
-                      <div class="col-auto">
-                        <span id="passwordHelpInline" class="form-text">
-                          Must be 8-20 characters long.
-                        </span>
-                      </div>
+                <form method="post"
+                      action="{{ url_for('main.add_panel') }}">
+                    <div class="row mb-3 g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="panel_title" class="col-form-label">Panel
+                                title</label>
+                        </div>
+                        <div class="col-auto">
+                            <input required type="text" id="panel_title"
+                                   class="form-control" name="panel_title">
+                        </div>
                     </div>
-                    <input type="text" class="form-control"
-                           name="panel_title"
-                           placeholder="Enter panel title">
                     <table class="table table-sm table-bordered">
                         <thead>
                         <tr class="table-secondary">
@@ -187,8 +138,13 @@
                         <tbody>
                         {% for item in records %}
                         <tr>
-                            <td><input type="checkbox" name="selected_rows"
-                                       value="{{ i }}"></td>
+                            <td class="text-center">
+                                <div class="form-check m-auto">
+                                    <input class="form-check-input"
+                                           name="selected_lab_ids"
+                                           type="checkbox" value="{{ item['Lab#'] }}" checked>
+                                </div>
+                            </td>
                             {% for value in item.values() %}
                             <td>{{ value }}</td>
                             {% endfor %}
@@ -196,6 +152,15 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                    <div class="col-12">
+                        <button class="btn btn-dark text-center m-auto"
+                                type="submit"
+                                name="secondary_form" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                title="Save panel">
+                            <i class="bi bi-clipboard"></i> Save panel
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -207,26 +172,26 @@
 
 {% endblock %}
 {% block script %}
-    {% if antibodies %}
-        var antibodies = {{ antibodies|tojson }};
-        $(".antibody-auto").autocomplete({
-            source: function( request, response ) {
-                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-                response( $.grep( antibodies, function( item ) {
-                  return matcher.test( item );
-                }) );
-            }
-        });
-    {% endif %}
-    {% if conjugates %}
-        var conjugates = {{ conjugates|tojson }};
-        $(".conjugate-auto").autocomplete({
-            source: function( request, response ) {
-                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-                response( $.grep( conjugates, function( item ) {
-                  return matcher.test( item );
-                }) );
-            }
-        });
-    {% endif %}
+{% if antibodies %}
+var antibodies = {{ antibodies|tojson }};
+$(".antibody-auto").autocomplete({
+source: function( request, response ) {
+var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+response( $.grep( antibodies, function( item ) {
+return matcher.test( item );
+}) );
+}
+});
+{% endif %}
+{% if conjugates %}
+var conjugates = {{ conjugates|tojson }};
+$(".conjugate-auto").autocomplete({
+source: function( request, response ) {
+var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+response( $.grep( conjugates, function( item ) {
+return matcher.test( item );
+}) );
+}
+});
+{% endif %}
 {% endblock %}

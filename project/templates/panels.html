@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<div class="p-4 mb-4 bg-light rounded-3 text-center">
+    <div class="container-fluid py-1">
+        <h3 class="display-6 fw-bold">
+            <i class="bi bi-collection"></i>
+            Antibody Conjugate Panel (ACP)
+        </h3>
+        <div class="row justify-content-md-center mt-4">
+            <p class="col-md-12 fs-4">
+                <b>ACP</b> helps researchers to refine antibody-conjugate
+                panels by reducing search space
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card border-dark mb-4">
+            <div class="card-header border-dark">
+                Available panels
+            </div>
+            <div class="card-body">
+                {% if panels %}
+                {% for panel in panels %}
+                    <table class="table table-sm">
+                        <thead>
+                        <tr class="table-secondary">
+                            <th>Title</th>
+                            <th>Created by (Email)</th>
+                            <th>Lab IDs</th>
+                            <th>Created at</th>
+                            <th>Updated at</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ panel.title }}</td>
+                                <td>{{ panel.created_by }}
+                                    ({{ panel.contact_email }})
+                                </td>
+                                <td>{{ panel.lab_ids }}</td>
+                                <td>{{ panel.created_at }}</td>
+                                <td>{{ panel.updated_at }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <!-- .card -->
+    </div>
+    {% if records %}
+    <div class="col-12">
+        <div class="card border-success mb-4">
+            <div class="card-header border-success">
+                Create Panel
+            </div>
+            <div class="card-body">
+                <form method="post"
+                      action="{{ url_for('main.add_panel') }}">
+                    <div class="row mb-3 g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="panel_title" class="col-form-label">Panel
+                                title</label>
+                        </div>
+                        <div class="col-auto">
+                            <input required type="text" id="panel_title"
+                                   class="form-control" name="panel_title">
+                        </div>
+                    </div>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                        <tr class="table-secondary">
+                            <th>Selection</th>
+                            {% for key in records[0].keys() %}
+                            <th>{{ key }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in records %}
+                        <tr>
+                            <td class="text-center">
+                                <div class="form-check m-auto">
+                                    <input class="form-check-input"
+                                           name="selected_lab_ids"
+                                           type="checkbox" value="{{ item['Lab#'] }}" checked>
+                                </div>
+                            </td>
+                            {% for value in item.values() %}
+                            <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="col-12">
+                        <button class="btn btn-dark text-center m-auto"
+                                type="submit"
+                                name="secondary_form" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                title="Save panel">
+                            <i class="bi bi-clipboard"></i> Save panel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- .card -->
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}
+{% block script %}
+{% endblock %}

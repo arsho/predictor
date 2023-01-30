@@ -1,11 +1,12 @@
 # main.py
 import json
-from flask import Blueprint, Flask, render_template, request, jsonify, url_for, \
-    redirect, \
-    flash
+from flask import Blueprint, Flask, render_template, request, \
+    jsonify, url_for, redirect, flash
 from flask_login import login_required, current_user
 from .controller import get_initial_panels, get_filtered_panels, \
     get_initial_records, get_antibody_conjugate
+from .models import Panel
+from . import db
 
 main = Blueprint('main', __name__)
 
@@ -15,10 +16,12 @@ def index():
     return render_template('index_public.html')
 
 
-@main.route('/profile')
+@main.route('/panels')
 @login_required
-def profile():
-    return render_template('index_old.html', name=current_user.name)
+def show_panels():
+    panels = Panel.query.all()
+    return render_template('panels.html', name=current_user.name,
+                           panels=panels)
 
 
 @main.route('/add', methods=["GET", "POST"])
@@ -74,28 +77,21 @@ def add_panel():
                                        antibodies=antibodies,
                                        conjugates=conjugates)
             elif "secondary_form" in request.form:
-                # flash("Secondary form submitted", "success")
-                panels = json.loads(
-                    request.form["old_panels"].replace("\'", "\""))
-                old_patterns = request.form["old_patterns"].strip()
-                patterns = request.form["patterns"].strip()
-                searched_antibody = request.form["searched_antibody"].strip()
-                if ":" not in patterns:
-                    exception_msg = "Pattern is not correct. Correct pattern "
-                    exception_msg += "<i><b>Antibody:Conjugate</b></i>"
-                    raise Exception(exception_msg)
-                if old_patterns != "":
-                    old_patterns = old_patterns + "," + patterns
-                else:
-                    old_patterns = patterns
-                panels, not_found_patterns = get_filtered_panels(panels,
-                                                                 patterns)
-                for item in not_found_patterns:
-                    flash(f"Pattern <b>{item}</b> not found", "warning")
-                return render_template('add.html', panels=panels,
-                                       old_patterns=old_patterns,
-                                       searched_antibody=searched_antibody,
-                                       name=current_user.name)
+                lab_ids = request.form.getlist("selected_lab_ids")
+                panel_title = request.form.get("panel_title")
+                created_by = current_user.name
+                contact_email = current_user.email
+                output = f"title: {panel_title}, ids: "
+                lab_ids = ",".join(lab_ids)
+                output += f"{lab_ids}"
+                output += f", created by: {created_by}({contact_email})"
+                new_panel = Panel(title=panel_title,
+                                  contact_email=contact_email,
+                                  created_by=created_by,
+                                  lab_ids=lab_ids)
+                db.session.add(new_panel)
+                db.session.commit()
+                return output
         except Exception as ex:
             flash(str(ex), "error")
             return redirect(url_for("main.add_panel"))
