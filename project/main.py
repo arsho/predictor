@@ -32,7 +32,6 @@ def show_panels():
 
 
 @main.route('/panel')
-@login_required
 def show_panel():
     data = get_full_data()
     panel_id = request.args.get("id")
