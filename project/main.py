@@ -5,7 +5,7 @@ from flask import Blueprint, Flask, render_template, request, \
 from flask_login import login_required, current_user
 from .controller import get_initial_panels, get_filtered_panels, \
     get_initial_records, get_antibody_conjugate, get_full_data, get_row
-from .models import Panel
+from .models import Panel, User
 from . import db
 
 main = Blueprint('main', __name__)
@@ -23,11 +23,32 @@ def show_panels():
     panels = Panel.query.all()
     panels = [panel.__dict__ for panel in panels]
     for panel in panels:
+        panel["published_by"] = User.query.get(panel["created_by"]).name
         panel["records"] = []
         for id in panel["lab_ids"].split(","):
             panel["records"].append(get_row(data, id))
     return render_template('panels.html', name=current_user.name,
+                           root_url=request.url_root,
                            panels=panels)
+
+
+@main.route('/panel')
+@login_required
+def show_panel():
+    data = get_full_data()
+    panel_id = request.args.get("id")
+    panel = Panel.query.get(panel_id)
+    if panel:
+        panel = panel.__dict__
+        panel["published_by"] = User.query.get(panel["created_by"]).name
+        panel["records"] = []
+        for id in panel["lab_ids"].split(","):
+            panel["records"].append(get_row(data, id))
+        return render_template('panel.html',
+                               name=current_user.name,
+                               panel=panel, root_url=request.url_root)
+    flash(f"No panel found with id {panel_id}", "warning")
+    return redirect(url_for('show_panels'))
 
 
 @main.route('/add', methods=["GET", "POST"])
@@ -85,19 +106,14 @@ def add_panel():
             elif "secondary_form" in request.form:
                 lab_ids = request.form.getlist("selected_lab_ids")
                 panel_title = request.form.get("panel_title")
-                created_by = current_user.name
-                contact_email = current_user.email
-                output = f"title: {panel_title}, ids: "
+                created_by = current_user.id
                 lab_ids = ",".join(lab_ids)
-                output += f"{lab_ids}"
-                output += f", created by: {created_by}({contact_email})"
                 new_panel = Panel(title=panel_title,
-                                  contact_email=contact_email,
                                   created_by=created_by,
                                   lab_ids=lab_ids)
                 db.session.add(new_panel)
                 db.session.commit()
-                return output
+                return "success"
         except Exception as ex:
             flash(str(ex), "error")
             return redirect(url_for("main.add_panel"))

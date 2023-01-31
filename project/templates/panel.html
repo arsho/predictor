@@ -2,9 +2,7 @@
 {% block head %}
 {% endblock %}
 {% block content %}
-{% if panels %}
-{% for panel in panels %}
-
+{% if panel %}
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
@@ -35,28 +33,6 @@
 
                             </div>
                         </span>
-
-                        <!--                        <span class="input-group mb-3 float-end">-->
-                        <!--                          <input type="text" class="form-control col-3"-->
-                        <!--                                 value="{{root_url}}panel?id={{panel.id}}">-->
-                        <!--                          <button class="btn btn-sm btn-success copy-btn">-->
-                        <!--                              <i class="bi bi-clipboard"></i> Copy-->
-                        <!--                          </button>-->
-                        <!--                        </span>-->
-                        <!--                        <span class="float-end">-->
-                        <!--                            <a class="btn btn-sm btn-success"-->
-                        <!--                               href='panel?id={{panel.id}}' target="_blank">-->
-                        <!--                                <i class="bi bi-display"></i> View-->
-                        <!--                            </a>-->
-                        <!--                            <a class="btn btn-sm btn-info"-->
-                        <!--                               href='panel?id={{panel.id}}' target="_blank">-->
-                        <!--                                <i class="bi bi-pencil"></i> Edit-->
-                        <!--                            </a>-->
-                        <!--                            <a class="btn btn-sm btn-danger"-->
-                        <!--                               href='panel?id={{panel.id}}' target="_blank">-->
-                        <!--                                <i class="bi bi-trash"></i> Delete-->
-                        <!--                            </a>-->
-                        <!--                        </span>-->
                     </caption>
                     <thead>
                     <tr class="table-secondary">
@@ -78,7 +54,6 @@
             </div>
         </div>
         <!-- .card -->
-        {% endfor %}
         {% endif %}
     </div>
 

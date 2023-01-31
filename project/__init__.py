@@ -2,7 +2,9 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_login import LoginManager 
+
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
@@ -12,8 +14,11 @@ def create_app():
 
     app.config['SECRET_KEY'] = '9OLWxND4o83j4K4iuopO'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    app.config['SITE_NAME'] = 'Antibody Conjugate Panel'
+    app.config['SITE_NAME_SHORT'] = 'ACP'
 
     db.init_app(app)
+    migrate = Migrate(app, db)
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'

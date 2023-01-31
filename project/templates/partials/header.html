@@ -8,19 +8,19 @@
             <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
         </svg>
         &nbsp;
-        <span class="fs-4">ACPP</span>
+        <span class="fs-4">{{config.SITE_NAME_SHORT}}</span>
     </a>
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         {% if current_user.is_authenticated %}
         <a class="me-3 py-2 text-dark text-decoration-none"
            href="{{url_for('main.show_panels')}}" data-bs-toggle="tooltip"
-           data-bs-placement="bottom" title="Dashboard">
+           data-bs-placement="bottom" title="Show all panels">
             <i class="bi bi-collection"></i> Panels
         </a>
         <a class="me-3 py-2 text-dark text-decoration-none" href="{{ url_for('main.add_panel') }}"
            data-bs-toggle="tooltip" data-bs-placement="bottom"
-           title="Analytics">
+           title="Add a new panel">
             <i class="bi bi-clipboard-data"></i> Add Panel
         </a>
         {% endif %}
@@ -28,22 +28,22 @@
         <a class="me-3 py-2 text-dark text-decoration-none"
            href="{{ url_for('auth.login') }}"
            data-bs-toggle="tooltip" data-bs-placement="bottom"
-           title="Profile">
-            <i class="bi bi-user"></i> Login
+           title="Login">
+            <i class="bi bi-box-arrow-in-right"></i> Login
         </a>
         <a class="me-3 py-2 text-dark text-decoration-none"
            href="{{ url_for('auth.signup') }}"
            data-bs-toggle="tooltip" data-bs-placement="bottom"
-           title="Profile">
-            <i class="bi bi-user"></i> Sign Up
+           title="Sign up">
+            <i class="bi bi-person-add"></i> Sign Up
         </a>
         {% endif %}
         {% if current_user.is_authenticated %}
         <a class="me-3 py-2 text-dark text-decoration-none"
            href="{{ url_for('auth.logout') }}"
            data-bs-toggle="tooltip" data-bs-placement="bottom"
-           title="Profile">
-            <i class="bi bi-user"></i> Logout
+           title="Logout">
+            <i class="bi bi-box-arrow-right"></i> Logout
         </a>
         {% endif %}
     </nav>

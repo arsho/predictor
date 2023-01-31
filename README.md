@@ -25,6 +25,16 @@ flask run
 
 ![alt web app demo](screenshots/dashboard.png)
 
+### SQL command
+- Init db:
+```shell
+flask db init
+```
+- Migrate:
+```shell
+flask db upgrade
+```
+
 ## Run CLI App
 
 - Run the [inventory_predictor.py](inventory_predictor.py) file using Python3
