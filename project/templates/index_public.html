@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<div class="p-4 mb-4 bg-light rounded-3 text-center">
+    <div class="container-fluid py-4">
+        <h3 class="display-6 fw-bold">
+            <i class="bi bi-collection"></i>
+            {{config.SITE_NAME}} ({{config.SITE_NAME_SHORT}})
+        </h3>
+        <div class="row justify-content-md-center mt-4">
+            <p class="col-md-12 fs-4">
+                <b>{{config.SITE_NAME_SHORT}}</b> helps researchers to refine antibody-conjugate
+                panels by reducing search space
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block script %}
+{% endblock %}

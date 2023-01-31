@@ -25,6 +25,16 @@ flask run
 
 ![alt web app demo](screenshots/dashboard.png)
 
+### SQL command
+- Init db:
+```shell
+flask db init
+```
+- Migrate:
+```shell
+flask db upgrade
+```
+
 ## Run CLI App
 
 - Run the [inventory_predictor.py](inventory_predictor.py) file using Python3
@@ -121,3 +131,4 @@ Program terminated
 
 - [Stackoverflow answer: All combinations from dictionary](https://stackoverflow.com/a/61335465/3129414)
 - [Flask minimal example](https://flask.palletsprojects.com/en/2.2.x/quickstart/#a-minimal-application)
+- [Flask user management](https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login)

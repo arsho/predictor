@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+{% if panels %}
+{% for panel in panels %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header text-bg-dark">
+                <h5 class="card-title mb-0">
+                    {{ panel.title }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-bordered
+                table-responsive caption-top">
+                    <caption class="mt-0 text-bg-secondary px-2">
+                        <span class="lead">
+                            <i class="bi bi-person"></i>
+                            {{ panel.published_by }}
+                        </span>
+                        <span class="row row-cols-lg-auto g-1 align-items-center float-end">
+                            <div class="col-12">
+                                <input id="panel_text_{{panel.id}}" type="text"
+                                       class="form-control form-control-sm col-3"
+                                       value="{{root_url}}panel?id={{panel.id}}">
+                            </div>
+                            <div class="col-12">
+                                <button id="panel_btn_{{panel.id}}"
+                                        class="btn btn-sm btn-success copy-btn">
+                                    <i class="bi bi-clipboard-check"></i> Copy
+                                </button>
+
+                            </div>
+                        </span>
+
+                        <!--                        <span class="input-group mb-3 float-end">-->
+                        <!--                          <input type="text" class="form-control col-3"-->
+                        <!--                                 value="{{root_url}}panel?id={{panel.id}}">-->
+                        <!--                          <button class="btn btn-sm btn-success copy-btn">-->
+                        <!--                              <i class="bi bi-clipboard"></i> Copy-->
+                        <!--                          </button>-->
+                        <!--                        </span>-->
+                        <!--                        <span class="float-end">-->
+                        <!--                            <a class="btn btn-sm btn-success"-->
+                        <!--                               href='panel?id={{panel.id}}' target="_blank">-->
+                        <!--                                <i class="bi bi-display"></i> View-->
+                        <!--                            </a>-->
+                        <!--                            <a class="btn btn-sm btn-info"-->
+                        <!--                               href='panel?id={{panel.id}}' target="_blank">-->
+                        <!--                                <i class="bi bi-pencil"></i> Edit-->
+                        <!--                            </a>-->
+                        <!--                            <a class="btn btn-sm btn-danger"-->
+                        <!--                               href='panel?id={{panel.id}}' target="_blank">-->
+                        <!--                                <i class="bi bi-trash"></i> Delete-->
+                        <!--                            </a>-->
+                        <!--                        </span>-->
+                    </caption>
+                    <thead>
+                    <tr class="table-secondary">
+                        {% for key in panel.records[0].keys() %}
+                        <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in panel.records %}
+                    <tr>
+                        {% for value in item.values() %}
+                        <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- .card -->
+        {% endfor %}
+        {% endif %}
+    </div>
+
+</div>
+
+
+{% endblock %}
+{% block script %}
+$(".copy-btn").on("click", function(){
+var btn_id = $(this).attr("id").split("panel_btn_")[1];
+var text = $("#panel_text_"+btn_id).val();
+var dummy = $("<input>").val(text).appendTo("body").select();
+document.execCommand("copy");
+dummy.remove();
+alert("Copied: " + text);
+});
+{% endblock %}
