@@ -43,7 +43,6 @@ def show_panel():
         for id in panel["lab_ids"].split(","):
             panel["records"].append(get_row(data, id))
         return render_template('panel.html',
-                               name=current_user.name,
                                panel=panel, root_url=request.url_root)
     flash(f"No panel found with id {panel_id}", "warning")
     return redirect(url_for('show_panels'))
