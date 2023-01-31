@@ -1,7 +1,8 @@
 <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
     <a href="{{ url_for('main.index') }}"
        class="d-flex align-items-center text-dark text-decoration-none"
-       data-bs-toggle="tooltip" data-bs-placement="bottom" title="ACPP">
+       data-bs-toggle="tooltip" data-bs-placement="bottom"
+       title="{{config.SITE_NAME_SHORT}}">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
              fill="currentColor" class="bi bi-collection"
              viewBox="0 0 16 16">
@@ -18,10 +19,11 @@
            data-bs-placement="bottom" title="Show all panels">
             <i class="bi bi-collection"></i> Panels
         </a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="{{ url_for('main.add_panel') }}"
+        <a class="me-3 py-2 text-dark text-decoration-none"
+           href="{{ url_for('main.add_panel') }}"
            data-bs-toggle="tooltip" data-bs-placement="bottom"
            title="Add a new panel">
-            <i class="bi bi-clipboard-data"></i> Add Panel
+            <i class="bi bi-file-earmark-plus"></i> Add Panel
         </a>
         {% endif %}
         {% if not current_user.is_authenticated %}

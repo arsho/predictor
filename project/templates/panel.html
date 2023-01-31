@@ -37,15 +37,19 @@
                     <thead>
                     <tr class="table-secondary">
                         {% for key in panel.records[0].keys() %}
+                        {% if key != 'repeat' %}
                         <th>{{ key }}</th>
+                        {% endif %}
                         {% endfor %}
                     </tr>
                     </thead>
                     <tbody>
                     {% for item in panel.records %}
                     <tr>
-                        {% for value in item.values() %}
+                        {% for key, value in item.items() %}
+                        {% if key != 'repeat' %}
                         <td>{{ value }}</td>
+                        {% endif %}
                         {% endfor %}
                     </tr>
                     {% endfor %}

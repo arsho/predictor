@@ -23,27 +23,27 @@
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control antibody-auto"
-                               name="antibody_1" value="CD103"
+                               name="antibody_1" id="antibody_1"
                                placeholder="Enter antibody name">
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control conjugate-auto"
-                               name="conjugate_1" value="APC"
+                               name="conjugate_1"
                                placeholder="Enter conjugate name">
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control antibody-auto"
-                               name="antibody_2" value="CD103"
+                               name="antibody_2" id="antibody_2"
                                placeholder="Enter antibody name">
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control conjugate-auto"
-                               name="conjugate_2" value="PE"
+                               name="conjugate_2"
                                placeholder="Enter conjugate name">
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control antibody-auto"
-                               name="antibody_3"
+                               name="antibody_3" id="antibody_3"
                                placeholder="Enter antibody name">
                     </div>
                     <div class="col-md-6">
@@ -53,7 +53,7 @@
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control antibody-auto"
-                               name="antibody_4"
+                               name="antibody_4" id="antibody_4"
                                placeholder="Enter antibody name">
                     </div>
                     <div class="col-md-6">
@@ -63,7 +63,7 @@
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control antibody-auto"
-                               name="antibody_5"
+                               name="antibody_5" id="antibody_5"
                                placeholder="Enter antibody name">
                     </div>
                     <div class="col-md-6">
@@ -73,7 +73,7 @@
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control antibody-auto"
-                               name="antibody_6"
+                               name="antibody_6" id="antibody_6"
                                placeholder="Enter antibody name">
                     </div>
                     <div class="col-md-6">
@@ -83,7 +83,7 @@
                     </div>
                     <div class="col-md-6">
                         <input type="text" class="form-control antibody-auto"
-                               name="antibody_7"
+                               name="antibody_7" id="antibody_7"
                                placeholder="Enter antibody name">
                     </div>
                     <div class="col-md-6">
@@ -91,12 +91,21 @@
                                name="conjugate_7"
                                placeholder="Enter conjugate name">
                     </div>
-
-
+                    <div class="col-md-6">
+                        <input type="text" class="form-control antibody-auto"
+                               name="antibody_8" id="antibody_8"
+                               placeholder="Enter antibody name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control conjugate-auto"
+                               name="conjugate_8"
+                               placeholder="Enter conjugate name">
+                    </div>
                     <div class="col-12">
                         <button class="btn btn-dark text-center m-auto"
                                 type="submit"
-                                name="primary_form" data-bs-toggle="tooltip"
+                                name="primary_form"
+                                data-bs-toggle="tooltip"
                                 data-bs-placement="bottom"
                                 title="Search antibody">
                             <i class="bi bi-search"></i> Search
@@ -109,17 +118,18 @@
     </div>
     {% if records %}
     <div class="col-12">
-        <div class="card border-success mb-4">
-            <div class="card-header border-success">
-                Create Panel
-            </div>
-            <div class="card-body">
-                <form method="post"
-                      action="{{ url_for('main.add_panel') }}">
+        <div class="card mb-4">
+            <form method="post"
+                  action="{{ url_for('main.add_panel') }}">
+                <div class="card-header text-bg-success">
+                    Create Panel
+                </div>
+                <div class="card-body">
                     <div class="row mb-3 g-3 align-items-center">
                         <div class="col-auto">
-                            <label for="panel_title" class="col-form-label">Panel
-                                title</label>
+                            <label for="panel_title" class="col-form-label">
+                                <span class="lead">Panel title</span>
+                            </label>
                         </div>
                         <div class="col-auto">
                             <input required type="text" id="panel_title"
@@ -131,38 +141,50 @@
                         <tr class="table-secondary">
                             <th>Selection</th>
                             {% for key in records[0].keys() %}
+                            {% if key != 'repeat' %}
                             <th>{{ key }}</th>
+                            {% endif %}
                             {% endfor %}
                         </tr>
                         </thead>
                         <tbody>
                         {% for item in records %}
+                        {% if item["repeat"] %}
+                        <tr class="table-danger">
+                            {% else %}
                         <tr>
+                            {% endif %}
                             <td class="text-center">
                                 <div class="form-check m-auto">
                                     <input class="form-check-input"
                                            name="selected_lab_ids"
-                                           type="checkbox" value="{{ item['Lab#'] }}" checked>
+                                           type="checkbox"
+                                           value="{{ item['Lab#'] }}" checked>
                                 </div>
                             </td>
-                            {% for value in item.values() %}
+                            {% for key, value in item.items() %}
+                            {% if key != 'repeat' %}
                             <td>{{ value }}</td>
+                            {% endif %}
                             {% endfor %}
                         </tr>
                         {% endfor %}
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer">
                     <div class="col-12">
-                        <button class="btn btn-dark text-center m-auto"
+                        <button class="btn btn-success text-center m-auto"
                                 type="submit"
-                                name="secondary_form" data-bs-toggle="tooltip"
+                                name="secondary_form"
+                                data-bs-toggle="tooltip"
                                 data-bs-placement="bottom"
                                 title="Save panel">
                             <i class="bi bi-clipboard"></i> Save panel
                         </button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
         <!-- .card -->
     </div>
@@ -183,14 +205,16 @@ return matcher.test( item );
 }
 });
 {% endif %}
-{% if conjugates %}
-var conjugates = {{ conjugates|tojson }};
+{% if antibody_mapper %}
+var antibody_mapper = {{ antibody_mapper|tojson|safe }};
+antibody_mapper=JSON.parse(antibody_mapper);
 $(".conjugate-auto").autocomplete({
-source: function( request, response ) {
-var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-response( $.grep( conjugates, function( item ) {
-return matcher.test( item );
-}) );
+source: function(request, response) {
+var input = $(this.element);
+var row_number = input.attr("name").split("_")[1];
+var antibody_val = $("#antibody_"+row_number).val();
+console.log(antibody_val);
+response(antibody_mapper[antibody_val]);
 }
 });
 {% endif %}

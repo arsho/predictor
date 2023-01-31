@@ -8,9 +8,12 @@ from . import db
 
 auth = Blueprint('auth', __name__)
 
-
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/login')
 def login():
+    return render_template('login.html')
+
+@auth.route('/login', methods=['POST'])
+def login_post():
     if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
@@ -28,7 +31,6 @@ def login():
         login_user(user, remember=remember)
         next_url = request.form.get("next")
         return redirect(next_url or url_for('main.show_panels'))
-    return render_template('login.html')
 
 
 @auth.route('/signup')
@@ -54,7 +56,7 @@ def signup_post():
     # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
-
+    flash('Account created successfully. Please login to continue.', 'success')
     return redirect(url_for('auth.login'))
 
 @auth.route('/logout')

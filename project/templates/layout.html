@@ -16,12 +16,13 @@
     </header>
     <main>
         <div>
-            {% with errors = get_flashed_messages() %}
-            {% if errors %}
-            <div class="alert alert-danger" role="alert">
-                <h4 class="alert-heading">Error!</h4>
+            {% with messages = get_flashed_messages(with_categories=true,
+            category_filter=["message"]) %}
+            {% if messages %}
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading">Warning!</h4>
                 <ul class="list-group list-group-flush">
-                    {%- for msg in errors %}
+                    {%- for category, msg in messages %}
                     <li class="list-group-item">{{ msg|safe }}</li>
                     {% endfor -%}
                 </ul>

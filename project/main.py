@@ -4,12 +4,11 @@ from flask import Blueprint, Flask, render_template, request, \
     jsonify, url_for, redirect, flash
 from flask_login import login_required, current_user
 from .controller import get_initial_panels, get_filtered_panels, \
-    get_initial_records, get_antibody_conjugate, get_full_data, get_row
+    get_initial_records, get_antibody_conjugate_mapper, get_full_data, get_row
 from .models import Panel, User
 from . import db
 
 main = Blueprint('main', __name__)
-
 
 @main.route('/')
 def index():
@@ -20,7 +19,7 @@ def index():
 @login_required
 def show_panels():
     data = get_full_data()
-    panels = Panel.query.all()
+    panels = Panel.query.order_by(Panel.created_at.desc()).all()
     panels = [panel.__dict__ for panel in panels]
     for panel in panels:
         panel["published_by"] = User.query.get(panel["created_by"]).name
@@ -54,7 +53,7 @@ def show_panel():
 @main.route('/add', methods=["GET", "POST"])
 @login_required
 def add_panel():
-    antibodies, conjugates = get_antibody_conjugate()
+    antibodies, conjugates, antibody_mapper = get_antibody_conjugate_mapper()
     if request.method == "POST":
         try:
             if "primary_form" in request.form:
@@ -113,7 +112,8 @@ def add_panel():
                                   lab_ids=lab_ids)
                 db.session.add(new_panel)
                 db.session.commit()
-                return "success"
+                flash('New panel created.', 'success')
+                return redirect(f'panel?id={new_panel.id}')
         except Exception as ex:
             flash(str(ex), "error")
             return redirect(url_for("main.add_panel"))
@@ -121,4 +121,5 @@ def add_panel():
         return render_template('add.html',
                                name=current_user.name,
                                antibodies=antibodies,
-                               conjugates=conjugates)
+                               conjugates=conjugates,
+                               antibody_mapper=json.dumps(antibody_mapper))

@@ -102,17 +102,26 @@ def get_full_data():
     data_path = os.path.join(dirname(realpath(__file__)), folder, data_file)
     return read_data_large(data_path)
 
-def get_antibody_conjugate():
+
+def get_antibody_conjugate_mapper():
     folder = "data"
     data_file = "inventory_large.xlsx"
     data_path = os.path.join(dirname(realpath(__file__)), folder, data_file)
     data = read_data_large(data_path)
     antibody = []
     conjugate = []
+    mapper = {}
     for row in data:
-        antibody.append(row["Antibody"])
-        conjugate.append(row["Conjugate"])
-    return list(set(antibody)), list(set(conjugate))
+        current_antibody = row["Antibody"].strip()
+        current_conjugate = row["Conjugate"].strip()
+        if current_antibody != "" and current_conjugate != "":
+            antibody.append(current_antibody)
+            conjugate.append(current_conjugate)
+            if current_antibody in mapper and current_conjugate != "" and current_conjugate != None:
+                mapper[current_antibody].append(current_conjugate)
+            elif current_antibody != "" and current_antibody != None and current_conjugate != "" and current_conjugate != None:
+                mapper[current_antibody] = [current_conjugate]
+    return list(set(antibody)), list(set(conjugate)), mapper
 
 
 def get_initial_panels(search_items):
@@ -125,11 +134,17 @@ def get_initial_records(search_elements):
     data = get_full_data()
     filtered_data = []
     not_found_elements = []
+    conjugate = {}
     for search_element in search_elements:
         found = False
         for row in data:
             if row["Antibody"] == search_element[0] and \
                     row["Conjugate"] == search_element[1]:
+                if row["Conjugate"] in conjugate:
+                    row["repeat"] = True
+                else:
+                    row["repeat"] = False
+                    conjugate[row["Conjugate"]] = True
                 found = True
                 filtered_data.append(row)
         if not found:
@@ -139,8 +154,3 @@ def get_initial_records(search_elements):
 
 if __name__ == "__main__":
     print("main")
-    data = get_full_data()
-    search_elements = [
-        ["CD103", "APC"]
-    ]
-    print(get_initial_records(search_elements))

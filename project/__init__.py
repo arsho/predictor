@@ -1,6 +1,6 @@
 # init.py
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager 
@@ -39,5 +39,13 @@ def create_app():
     # blueprint for non-auth parts of app
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('error.html', code=404), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template('error.html', code=500), 500
 
     return app
