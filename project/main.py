@@ -4,7 +4,7 @@ from flask import Blueprint, Flask, render_template, request, \
     jsonify, url_for, redirect, flash
 from flask_login import login_required, current_user
 from .controller import get_initial_panels, get_filtered_panels, \
-    get_initial_records, get_antibody_conjugate
+    get_initial_records, get_antibody_conjugate, get_full_data, get_row
 from .models import Panel
 from . import db
 
@@ -19,7 +19,13 @@ def index():
 @main.route('/panels')
 @login_required
 def show_panels():
+    data = get_full_data()
     panels = Panel.query.all()
+    panels = [panel.__dict__ for panel in panels]
+    for panel in panels:
+        panel["records"] = []
+        for id in panel["lab_ids"].split(","):
+            panel["records"].append(get_row(data, id))
     return render_template('panels.html', name=current_user.name,
                            panels=panels)
 

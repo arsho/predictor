@@ -89,6 +89,13 @@ def get_anitibody_data():
     return data
 
 
+def get_row(data, lab_id):
+    for record in data:
+        if str(record["Lab#"]) == lab_id:
+            return record
+    return []
+
+
 def get_full_data():
     folder = "data"
     data_file = "inventory_large.xlsx"
