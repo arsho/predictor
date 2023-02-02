@@ -19,8 +19,11 @@
             {% with messages = get_flashed_messages(with_categories=true,
             category_filter=["message"]) %}
             {% if messages %}
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-warning alert-dismissible fade show"
+                 role="alert">
                 <h4 class="alert-heading">Warning!</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
                 <ul class="list-group list-group-flush">
                     {%- for category, msg in messages %}
                     <li class="list-group-item">{{ msg|safe }}</li>
@@ -33,8 +36,12 @@
         <div>
             {% with errors = get_flashed_messages(category_filter=["error"]) %}
             {% if errors %}
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-danger alert-dismissible fade show"
+                 role="alert">
                 <h4 class="alert-heading">Error!</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+
                 <ul class="list-group list-group-flush">
                     {%- for msg in errors %}
                     <li class="list-group-item">{{ msg|safe }}</li>
@@ -45,10 +52,15 @@
             {% endwith %}
         </div>
         <div>
-            {% with warnings = get_flashed_messages(category_filter=["warning"]) %}
+            {% with warnings =
+            get_flashed_messages(category_filter=["warning"]) %}
             {% if warnings %}
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-warning alert-dismissible fade show"
+                 role="alert">
                 <h4 class="alert-heading">Warning!</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+
                 <ul class="list-group list-group-flush">
                     {%- for msg in warnings %}
                     <li class="list-group-item">{{ msg|safe }}</li>
@@ -59,10 +71,15 @@
             {% endwith %}
         </div>
         <div>
-            {% with success_msg = get_flashed_messages(category_filter=["success"]) %}
+            {% with success_msg =
+            get_flashed_messages(category_filter=["success"]) %}
             {% if success_msg %}
-            <div class="alert alert-success" role="alert">
+            <div class="alert alert-success alert-dismissible fade show"
+                 role="alert">
                 <h4 class="alert-heading">Success!</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+
                 <ul class="list-group list-group-flush">
                     {%- for msg in success_msg %}
                     <li class="list-group-item">{{ msg|safe }}</li>

@@ -30,6 +30,21 @@ def show_panels():
                            root_url=request.url_root,
                            panels=panels)
 
+@main.route('/my_panels')
+@login_required
+def show_my_panels():
+    data = get_full_data()
+    current_user_id = current_user.id
+    panels = Panel.query.filter_by(created_by=current_user_id).order_by(Panel.created_at.desc()).all()
+    panels = [panel.__dict__ for panel in panels]
+    for panel in panels:
+        panel["published_by"] = User.query.get(panel["created_by"]).name
+        panel["records"] = []
+        for id in panel["lab_ids"].split(","):
+            panel["records"].append(get_row(data, id))
+    return render_template('panels.html', name=current_user.name,
+                           root_url=request.url_root,
+                           panels=panels, modification_access=True)
 
 @main.route('/panel')
 def show_panel():
@@ -46,6 +61,8 @@ def show_panel():
                                panel=panel, root_url=request.url_root)
     flash(f"No panel found with id {panel_id}", "warning")
     return redirect(url_for('show_panels'))
+
+
 
 
 @main.route('/add', methods=["GET", "POST"])
@@ -121,3 +138,24 @@ def add_panel():
                                antibodies=antibodies,
                                conjugates=conjugates,
                                antibody_mapper=json.dumps(antibody_mapper))
+
+
+@main.route('/delete', methods=["POST"])
+@login_required
+def delete_panel():
+    try:
+        current_user_id = current_user.id
+        panel_id = request.form.get("panel_id")
+        panel = Panel.query.get(panel_id)
+        if current_user_id == panel.created_by:
+            db.session.delete(panel)
+            db.session.commit()
+            flash(f'Panel <b>{panel.title}</b> is deleted successfully.',
+                  'success')
+            return redirect(url_for("main.show_my_panels"))
+        else:
+            flash(f'You are not authorized to delete this panel.', 'error')
+            return redirect(url_for("main.show_my_panels"))
+    except Exception as ex:
+        flash(str(ex), "error")
+        return redirect(url_for("main.show_my_panels"))

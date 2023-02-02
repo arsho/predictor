@@ -25,6 +25,11 @@
            title="Add a new panel">
             <i class="bi bi-file-earmark-plus"></i> Add Panel
         </a>
+        <a class="me-3 py-2 text-dark text-decoration-none"
+           href="{{url_for('main.show_my_panels')}}" data-bs-toggle="tooltip"
+           data-bs-placement="bottom" title="Show my panels">
+            <i class="bi bi-person-workspace"></i> My Panels
+        </a>
         {% endif %}
         {% if not current_user.is_authenticated %}
         <a class="me-3 py-2 text-dark text-decoration-none"
