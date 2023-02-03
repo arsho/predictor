@@ -10,16 +10,25 @@ from . import db
 
 main = Blueprint('main', __name__)
 
+
 @main.route('/')
 def index():
     return render_template('index_public.html')
 
 
-@main.route('/panels')
+@main.route('/panels', methods=['GET', 'POST'])
 @login_required
 def show_panels():
     data = get_full_data()
-    panels = Panel.query.order_by(Panel.created_at.desc()).all()
+    page_title = "All Panels"
+    if request.method == 'POST':
+        title = request.form['search_title']
+        panels = Panel.query.filter(
+            Panel.title.contains(title)).order_by(
+            Panel.created_at.desc()).all()
+        page_title = f"Search results for <i>{title}</i>"
+    else:
+        panels = Panel.query.order_by(Panel.created_at.desc()).all()
     panels = [panel.__dict__ for panel in panels]
     for panel in panels:
         panel["published_by"] = User.query.get(panel["created_by"]).name
@@ -27,15 +36,18 @@ def show_panels():
         for id in panel["lab_ids"].split(","):
             panel["records"].append(get_row(data, id))
     return render_template('panels.html', name=current_user.name,
+                           current_user_id=current_user.id,
                            root_url=request.url_root,
-                           panels=panels)
+                           panels=panels, page_title=page_title)
+
 
 @main.route('/my_panels')
 @login_required
 def show_my_panels():
     data = get_full_data()
     current_user_id = current_user.id
-    panels = Panel.query.filter_by(created_by=current_user_id).order_by(Panel.created_at.desc()).all()
+    panels = Panel.query.filter_by(created_by=current_user_id).order_by(
+        Panel.created_at.desc()).all()
     panels = [panel.__dict__ for panel in panels]
     for panel in panels:
         panel["published_by"] = User.query.get(panel["created_by"]).name
@@ -44,25 +56,35 @@ def show_my_panels():
             panel["records"].append(get_row(data, id))
     return render_template('panels.html', name=current_user.name,
                            root_url=request.url_root,
-                           panels=panels, modification_access=True)
+                           panels=panels, modification_access=True,
+                           page_title="My Panels")
+
 
 @main.route('/panel')
 def show_panel():
     data = get_full_data()
     panel_id = request.args.get("id")
     panel = Panel.query.get(panel_id)
+
     if panel:
         panel = panel.__dict__
         panel["published_by"] = User.query.get(panel["created_by"]).name
         panel["records"] = []
         for id in panel["lab_ids"].split(","):
             panel["records"].append(get_row(data, id))
+        if current_user.is_authenticated:
+            current_user_id = current_user.id
+            if current_user_id == panel["created_by"]:
+                return render_template('panel.html',
+                                       panel=panel,
+                                       root_url=request.url_root,
+                                       modification_access=True,
+                                       page_title="Panel")
         return render_template('panel.html',
-                               panel=panel, root_url=request.url_root)
+                               panel=panel, root_url=request.url_root,
+                               page_title="Panel")
     flash(f"No panel found with id {panel_id}", "warning")
     return redirect(url_for('show_panels'))
-
-
 
 
 @main.route('/add', methods=["GET", "POST"])
@@ -116,7 +138,8 @@ def add_panel():
                                        searched_items=search_items,
                                        name=current_user.name,
                                        antibodies=antibodies,
-                                       conjugates=conjugates)
+                                       conjugates=conjugates,
+                                       page_title="Add Panel")
             elif "secondary_form" in request.form:
                 lab_ids = request.form.getlist("selected_lab_ids")
                 panel_title = request.form.get("panel_title")
@@ -137,7 +160,8 @@ def add_panel():
                                name=current_user.name,
                                antibodies=antibodies,
                                conjugates=conjugates,
-                               antibody_mapper=json.dumps(antibody_mapper))
+                               antibody_mapper=json.dumps(antibody_mapper),
+                               page_title="Add Panel")
 
 
 @main.route('/delete', methods=["POST"])

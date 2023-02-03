@@ -2,6 +2,8 @@
 {% block head %}
 {% endblock %}
 {% block content %}
+{% from 'macros/page_title.html' import show_page_title %}
+{{ show_page_title(page_title) }}
 <div class="row">
     <div class="col-12">
         <div class="card border-dark mb-4">

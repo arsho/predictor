@@ -1,0 +1,7 @@
+{% macro show_page_title(page_title) -%}
+{% if page_title %}
+<h2 class="pb-2 border-bottom">
+    {{ page_title|safe }}
+</h2>
+{% endif %}
+{%- endmacro %}

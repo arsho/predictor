@@ -118,7 +118,8 @@ def get_antibody_conjugate_mapper():
             antibody.append(current_antibody)
             conjugate.append(current_conjugate)
             if current_antibody in mapper and current_conjugate != "" and current_conjugate != None:
-                mapper[current_antibody].append(current_conjugate)
+                if current_conjugate not in mapper[current_antibody]:
+                    mapper[current_antibody].append(current_conjugate)
             elif current_antibody != "" and current_antibody != None and current_conjugate != "" and current_conjugate != None:
                 mapper[current_antibody] = [current_conjugate]
     return list(set(antibody)), list(set(conjugate)), mapper
