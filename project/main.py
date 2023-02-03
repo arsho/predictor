@@ -20,15 +20,16 @@ def index():
 @login_required
 def show_panels():
     data = get_full_data()
-    page_title = "All Panels"
+    page_title = "All Public Panels"
     if request.method == 'POST':
         title = request.form['search_title']
-        panels = Panel.query.filter(
+        panels = Panel.query.filter_by(is_publish=True).filter(
             Panel.title.contains(title)).order_by(
             Panel.created_at.desc()).all()
-        page_title = f"Search results for <i>{title}</i>"
+        page_title = f"Search results for public panels with title <i>{title}</i>"
     else:
-        panels = Panel.query.order_by(Panel.created_at.desc()).all()
+        panels = Panel.query.filter_by(is_publish=True).order_by(
+            Panel.created_at.desc()).all()
     panels = [panel.__dict__ for panel in panels]
     for panel in panels:
         panel["published_by"] = User.query.get(panel["created_by"]).name
@@ -38,7 +39,8 @@ def show_panels():
     return render_template('panels.html', name=current_user.name,
                            current_user_id=current_user.id,
                            root_url=request.url_root,
-                           panels=panels, page_title=page_title)
+                           panels=panels, page_title=page_title,
+                           only_public_panels=True)
 
 
 @main.route('/my_panels')
@@ -80,11 +82,17 @@ def show_panel():
                                        root_url=request.url_root,
                                        modification_access=True,
                                        page_title="Panel")
+        if panel["is_publish"] == False or panel["is_publish"] == None:
+            flash(f"Panel {panel_id} is not publicly available.", "warning")
+            if current_user.is_authenticated:
+                return redirect(url_for('main.show_panels'))
+            else:
+                return redirect(url_for('main.index'))
         return render_template('panel.html',
                                panel=panel, root_url=request.url_root,
                                page_title="Panel")
     flash(f"No panel found with id {panel_id}", "warning")
-    return redirect(url_for('show_panels'))
+    return redirect(url_for('main.index'))
 
 
 @main.route('/add', methods=["GET", "POST"])
@@ -143,11 +151,16 @@ def add_panel():
             elif "secondary_form" in request.form:
                 lab_ids = request.form.getlist("selected_lab_ids")
                 panel_title = request.form.get("panel_title")
+                is_publish_value = request.form.get("is_publish", False)
                 created_by = current_user.id
                 lab_ids = ",".join(lab_ids)
+                is_publish = False
+                if is_publish_value == "public":
+                    is_publish = True
                 new_panel = Panel(title=panel_title,
                                   created_by=created_by,
-                                  lab_ids=lab_ids)
+                                  lab_ids=lab_ids,
+                                  is_publish=is_publish)
                 db.session.add(new_panel)
                 db.session.commit()
                 flash('New panel created.', 'success')
@@ -171,14 +184,47 @@ def delete_panel():
         current_user_id = current_user.id
         panel_id = request.form.get("panel_id")
         panel = Panel.query.get(panel_id)
-        if current_user_id == panel.created_by:
-            db.session.delete(panel)
-            db.session.commit()
-            flash(f'Panel <b>{panel.title}</b> is deleted successfully.',
-                  'success')
-            return redirect(url_for("main.show_my_panels"))
+        if panel:
+            if current_user_id == panel.created_by:
+                db.session.delete(panel)
+                db.session.commit()
+                flash(f'Panel <b>{panel.title}</b> is deleted successfully.',
+                      'success')
+                return redirect(url_for("main.show_my_panels"))
+            else:
+                flash(f'You are not authorized to delete this panel.', 'error')
+                return redirect(url_for("main.show_my_panels"))
         else:
-            flash(f'You are not authorized to delete this panel.', 'error')
+            flash(f'Panel with id {panel_id} is not found.', 'error')
+            return redirect(url_for("main.show_my_panels"))
+    except Exception as ex:
+        flash(str(ex), "error")
+        return redirect(url_for("main.show_my_panels"))
+
+
+@main.route('/change_visibility', methods=["POST"])
+@login_required
+def change_visibility():
+    try:
+        current_user_id = current_user.id
+        panel_id = request.form.get("panel_id")
+        panel = Panel.query.get(panel_id)
+        if panel:
+            if current_user_id == panel.created_by:
+                current_visibility = panel.is_publish
+                if current_visibility == True:
+                    panel.is_publish = False
+                else:
+                    panel.is_publish = True
+                db.session.commit()
+                flash(f'Panel <b>{panel.title}</b> is updated successfully.',
+                      'success')
+                return redirect(f'panel?id={panel.id}')
+            else:
+                flash(f'You are not authorized to modify this panel.', 'error')
+                return redirect(url_for("main.show_my_panels"))
+        else:
+            flash(f'Panel with id {panel_id} is not found.', 'error')
             return redirect(url_for("main.show_my_panels"))
     except Exception as ex:
         flash(str(ex), "error")

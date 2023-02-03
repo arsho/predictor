@@ -8,12 +8,25 @@
 
 {% if panels %}
 {% for panel in panels %}
+{% if panel.is_publish %}
+{% set visibility_msg = "Make it private" %}
+{% set current_visibility = "Public" %}
+{% else %}
+{% set visibility_msg = "Make it public" %}
+{% set current_visibility = "Only me" %}
+{% endif %}
+
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header text-bg-dark">
                 <h5 class="card-title mb-0 lh-base">
                     {{ panel.title }}
+                    {% if not only_public_panels %}
+                    <small>
+                        (<i class="bi bi-view-list"></i> {{current_visibility}})
+                    </small>
+                    {% endif %}
                     <span class="float-none float-lg-end">
                         <button class="btn btn-sm btn-secondary toggle-view"
                                 data-bs-toggle="collapse"
@@ -29,11 +42,57 @@
                             <i class="bi bi-display"></i> View
                         </a>
                     {% if modification_access or panel.created_by == current_user_id %}
+                        <button type="button" class="btn btn-sm btn-warning"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirm_visibility_Modal_{{panel.id}}">
+                            <i class="bi bi-exclamation-circle"></i> {{ visibility_msg }}
+                        </button>
                         <button type="button" class="btn btn-sm btn-danger"
                                 data-bs-toggle="modal"
                                 data-bs-target="#confirmModal_{{panel.id}}">
                             <i class="bi bi-trash"></i> Delete
                         </button>
+                    <!-- Visibility Modal -->
+                    <div class="modal fade text-dark"
+                         id="confirm_visibility_Modal_{{panel.id}}"
+                         tabindex="-1"
+                         aria-labelledby="confirm_visibilityModalLabel_{{panel.id}}"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5"
+                                        id="confirm_visibilityModalLabel_{{panel.id}}">
+                                        Confirm visibility change
+                                    </h1>
+                                    <button type="button" class="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to change the visibility of
+                                    panel <i>{{panel.title}}</i> ?
+                                </div>
+                                <div class="modal-footer">
+                                    <form method="post"
+                                          action="{{url_for('main.change_visibility')}}">
+                                        <input type="hidden" name="panel_id"
+                                               value="{{panel.id}}">
+                                        <button type="button"
+                                                class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Cancel
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-warning">
+                                            <i class="bi bi-exclamation-circle"></i> {{ visibility_msg }}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./Visibility Modal -->
+
                         <!-- Modal -->
                     <div class="modal fade text-dark"
                          id="confirmModal_{{panel.id}}"

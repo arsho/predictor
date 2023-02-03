@@ -138,6 +138,7 @@
                                    class="form-control" name="panel_title">
                         </div>
                     </div>
+
                     <table class="table table-sm table-bordered">
                         <thead>
                         <tr class="table-secondary">
@@ -173,6 +174,23 @@
                         {% endfor %}
                         </tbody>
                     </table>
+
+                    <div class="row mb-3 g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="is_publish" class="col-form-label">
+                                <span class="lead">Visibility of the panel</span>
+                            </label>
+                        </div>
+                        <div class="col-auto">
+                            <select class="form-select" id="is_publish"
+                                    name="is_publish"
+                                    aria-label="Default select example" required>
+                                <option value="private" selected>Only me</option>
+                                <option value="public">Public</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="card-footer">
                     <div class="col-12">
