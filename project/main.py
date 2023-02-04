@@ -20,7 +20,7 @@ def index():
 @login_required
 def show_panels():
     data = get_full_data()
-    page_title = "All Public Panels"
+    page_title = "All Published Panels"
     if request.method == 'POST':
         title = request.form['search_title']
         panels = Panel.query.filter_by(is_publish=True).filter(
@@ -63,6 +63,7 @@ def show_my_panels():
 
 
 @main.route('/panel')
+@login_required
 def show_panel():
     data = get_full_data()
     panel_id = request.args.get("id")

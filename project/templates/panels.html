@@ -9,11 +9,13 @@
 {% if panels %}
 {% for panel in panels %}
 {% if panel.is_publish %}
-{% set visibility_msg = "Make it private" %}
-{% set current_visibility = "Public" %}
+{% set visibility_msg = "Change visibility" %}
+{% set current_visibility = "Visible to other members" %}
+{% set future_visibility = "Visible to only me" %}
 {% else %}
-{% set visibility_msg = "Make it public" %}
-{% set current_visibility = "Only me" %}
+{% set visibility_msg = "Change visibility" %}
+{% set current_visibility = "Visible to only me" %}
+{% set future_visibility = "Visible to other members" %}
 {% endif %}
 
 <div class="row">
@@ -70,8 +72,7 @@
                                             aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    Are you sure you want to change the visibility of
-                                    panel <i>{{panel.title}}</i> ?
+                                    Are you sure you want to make it <b>{{future_visibility}}</b> ?
                                 </div>
                                 <div class="modal-footer">
                                     <form method="post"
@@ -84,7 +85,7 @@
                                         </button>
                                         <button type="submit"
                                                 class="btn btn-warning">
-                                            <i class="bi bi-exclamation-circle"></i> {{ visibility_msg }}
+                                            <i class="bi bi-exclamation-circle"></i> Yes
                                         </button>
                                     </form>
                                 </div>
